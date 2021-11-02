@@ -5,15 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collection;
 
-@Entity(name = "Role")
-@Table(name = "roles")
+@Entity(name = "Winnings")
+@Table(name = "winnings")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+public class Winnings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;//TODO this attribute has to be changed in RoleRepo, when changed name --> roleName
+    private String tips;
+    private int superNumber;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<User> users;
 }
