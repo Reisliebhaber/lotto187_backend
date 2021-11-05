@@ -23,6 +23,12 @@ public class TipServiceImpl implements TipService {
     private final WinningsRepo winningsRepo;
 
     @Override
+    public Tip saveTip(Tip tip) {
+        log.info("Saving new Tip {} to the database");
+        return tipRepo.save(tip);
+    }
+
+    @Override
     public Tip saveTipWithUsername(String username, Tip tip) {
         User player = userRepo.findByUsername(username);
         log.info("Saving new Tip of User {} to the database", player.getName());
@@ -49,7 +55,7 @@ public class TipServiceImpl implements TipService {
     public List<Winnings> getWinningsByUsername(String username) {
         User player = userRepo.findByUsername(username);
         log.info("Fetching all winnings of user {}", username);
-        return winningsRepo.findAllByUsers(player);
+        return null;//winningsRepo.findAllByUsers(player);
     }
 /*
     @Override

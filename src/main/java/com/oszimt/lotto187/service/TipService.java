@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface TipService {
     Tip saveTipWithUsername(String username, Tip tip);
+    Tip saveTip(Tip tip);
     Tip getTip(Long id);
     List<Tip> getTipsByUsername(String username);
     List<Winnings> getWinningsByUsername(String username);
