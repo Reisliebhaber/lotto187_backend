@@ -20,5 +20,4 @@ public class Tip {
     private LocalDateTime tippingTime;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<User> users;
-    private boolean isTip;
 }

@@ -1,14 +1,14 @@
 package com.oszimt.lotto187.service;
 
+import com.oszimt.lotto187.domain.LottoNumbers;
 import com.oszimt.lotto187.domain.Tip;
-import com.oszimt.lotto187.domain.Winnings;
-import com.oszimt.lotto187.lottofunc.WinningClasses;
+import com.oszimt.lotto187.domain.WinningClasses;
 
 import java.util.List;
 
 public interface WinService {
-    WinningClasses calculateWinningClass(Tip lotteryNumbers, Tip playerTip);
-    Winnings savePlayerWin(Tip playerTip, WinningClasses winningClass);
+    WinningClasses calculateWinningClass(LottoNumbers lotteryNumbers, Tip playerTip);
+    WinningClasses savePlayerWin(Tip playerTip, WinningClasses winningClass);
     List<Integer> strTipsToList(String tipsAsString);
-    int calculateWinningClass(List<Integer> tips, List<Integer> winningSequence);
+    int calculateHits(List<Integer> tips, List<Integer> winningSequence);
 }

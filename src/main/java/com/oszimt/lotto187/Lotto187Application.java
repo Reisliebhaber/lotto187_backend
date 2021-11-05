@@ -1,9 +1,9 @@
 package com.oszimt.lotto187;
 
-import com.oszimt.lotto187.domain.Role;
+import com.oszimt.lotto187.domain.LottoNumbers;
 import com.oszimt.lotto187.domain.Tip;
 import com.oszimt.lotto187.domain.User;
-import com.oszimt.lotto187.lottofunc.WinningClasses;
+import com.oszimt.lotto187.repository.LottoNumberRepo;
 import com.oszimt.lotto187.service.TipService;
 import com.oszimt.lotto187.service.UserService;
 import com.oszimt.lotto187.service.WinService;
@@ -30,14 +30,11 @@ public class Lotto187Application {
     }
 
     @Bean
-    CommandLineRunner run(UserService userService, TipService tipService, WinService winService) {
+    CommandLineRunner run(UserService userService, TipService tipService, WinService winService, LottoNumberRepo lottoNumberRepo) {
         return args -> {
-            Tip tysTip = new Tip(null, "6;15;4;3;2;1", 6, LocalDateTime.now(), new ArrayList<>(), true);
-            Tip maxisTip = new Tip(null, "1;2;3;3;2;1", 0, LocalDateTime.now(), new ArrayList<>(), true);
-            userService.saveRole(new Role(null, "ROLE_USER"));
-            userService.saveRole(new Role(null, "ROLE_EMPLOYEE"));
-            userService.saveRole(new Role(null, "ROLE_ADMIN"));
-            userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
+
+            Tip tysTip = new Tip(null, "6;15;4;3;2;1", 6, LocalDateTime.now(), new ArrayList<>());
+            Tip maxisTip = new Tip(null, "1;2;3;3;2;1", 0, LocalDateTime.now(), new ArrayList<>());
 
             userService.saveUser(new User(null, "Maxis Cock", "maxi", "12345", new ArrayList<>()));
             userService.saveUser(new User(null, "Lams Cock", "lami", "12345", new ArrayList<>()));
@@ -54,16 +51,16 @@ public class Lotto187Application {
             userService.addRoleToUser("arnold", "ROLE_SUPER_ADMIN");
 
             tipService.saveTipWithUsername("maxi", maxisTip);
-            tipService.saveTipWithUsername("maxi", new Tip(null, "4;5;6;7;8;9", 10, LocalDateTime.now(), new ArrayList<>(), true));
+            tipService.saveTipWithUsername("maxi", new Tip(null, "4;5;6;7;8;9", 10, LocalDateTime.now(), new ArrayList<>()));
             tipService.saveTipWithUsername("ty", tysTip);
             //tipService.getTips("maxi").forEach(tip -> System.out.println(tip.getTips()));
             //Winning Lotto:
-            Tip lottoNumber = new Tip(null, "11;12;13;14;15;1", 6, LocalDateTime.now(), new ArrayList<>(), false);
-            tipService.saveTip(lottoNumber);
-            WinningClasses rivet = winService.calculateWinningClass(lottoNumber, maxisTip);
-            WinningClasses winClass9 = winService.calculateWinningClass(lottoNumber, tysTip);
-            winService.savePlayerWin(maxisTip, rivet);
-            winService.savePlayerWin(tysTip, winClass9);
+            LottoNumbers lottoNumber = new LottoNumbers(null, "11;12;13;14;15;1", 6, LocalDateTime.now(), new ArrayList<>());
+            lottoNumberRepo.save(lottoNumber);
+            winService.calculateWinningClass(lottoNumber, maxisTip);
+            winService.calculateWinningClass(lottoNumber, tysTip);
+            /*winService.savePlayerWin(maxisTip, rivet1);
+            winService.savePlayerWin(tysTip, winClass9);*/
         };
     }
 }

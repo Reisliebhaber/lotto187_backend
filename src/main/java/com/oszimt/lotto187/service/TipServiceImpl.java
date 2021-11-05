@@ -2,10 +2,10 @@ package com.oszimt.lotto187.service;
 
 import com.oszimt.lotto187.domain.Tip;
 import com.oszimt.lotto187.domain.User;
-import com.oszimt.lotto187.domain.Winnings;
+import com.oszimt.lotto187.domain.WinningClasses;
 import com.oszimt.lotto187.repository.TipRepo;
 import com.oszimt.lotto187.repository.UserRepo;
-import com.oszimt.lotto187.repository.WinningsRepo;
+import com.oszimt.lotto187.repository.WinningClassesRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.List;
 public class TipServiceImpl implements TipService {
     private final TipRepo tipRepo;
     private final UserRepo userRepo;
-    private final WinningsRepo winningsRepo;
+    private final WinningClassesRepo winningsRepo;
 
     @Override
     public Tip saveTip(Tip tip) {
@@ -52,7 +52,7 @@ public class TipServiceImpl implements TipService {
     }
 
     @Override//TODO can this be removed?
-    public List<Winnings> getWinningsByUsername(String username) {
+    public List<WinningClasses> getWinningsByUsername(String username) {
         User player = userRepo.findByUsername(username);
         log.info("Fetching all winnings of user {}", username);
         return null;//winningsRepo.findAllByUsers(player);
