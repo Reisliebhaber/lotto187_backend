@@ -18,6 +18,7 @@ public class User {//Maybe Renaming in Future
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    @Column(unique = true)
     private String username;// can be used as a String
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)

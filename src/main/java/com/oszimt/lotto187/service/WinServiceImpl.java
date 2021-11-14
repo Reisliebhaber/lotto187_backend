@@ -4,6 +4,7 @@ package com.oszimt.lotto187.service;
 import com.oszimt.lotto187.domain.LottoNumbers;
 import com.oszimt.lotto187.domain.Tip;
 import com.oszimt.lotto187.domain.WinningClasses;
+import com.oszimt.lotto187.repository.LottoNumberRepo;
 import com.oszimt.lotto187.repository.TipRepo;
 import com.oszimt.lotto187.repository.UserRepo;
 import com.oszimt.lotto187.repository.WinningClassesRepo;
@@ -12,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ public class WinServiceImpl implements WinService {
     private final TipRepo tipRepo;
     private final UserRepo userRepo;
     private final WinningClassesRepo winningClassesRepo;
+    private final LottoNumberRepo lottoNumberRepo;
 
     //method, which takes 2 Tip-Objects and compares its attributes 'tips' & 'superNumber' and calculates Lotto algorithm
     // finally  creating a Winnings instance
@@ -59,5 +63,24 @@ public class WinServiceImpl implements WinService {
     @Override
     public int calculateHits(List<Integer> tips, List<Integer> winningSequence) {
         return ((Long) tips.stream().filter(winningSequence::contains).count()).intValue();
+    }
+
+    @Override // TODO if Time
+    public HashMap<Integer, Integer> calculateLottoNumberStatistic() {
+        List<Integer> allLottoNumbers = new ArrayList<>();
+        HashMap<Integer, Integer> lottoNumberStatistic = new HashMap<>();
+        lottoNumberRepo.findAll().forEach(x -> Arrays.stream(x.getLottoNumbers().split(";"))
+                .map(Integer::parseInt).forEachOrdered(allLottoNumbers::add));
+        /*lottoNumberStatistic = allLottoNumbers.stream().collect(
+                Collectors.groupingBy(num -> Integer.parseInt(num.toString()),
+                Collectors.summingInt(a -> 1)));
+
+        Map<Integer, Integer> monthsToCounts =
+        people.stream().collect(
+                Collectors.groupingBy(p -> p.getBirthday().getMonthValue(),
+                Collectors.summingInt(a -> 1)));
+         */
+        //lottoNumberRepo.findAll().forEach(x -> Arrays.stream(x.getLottoNumbers().split(";")).);.collect(Collectors.toMap(LottoNumbers::getId, Function.identity()));
+        return null;
     }
 }
