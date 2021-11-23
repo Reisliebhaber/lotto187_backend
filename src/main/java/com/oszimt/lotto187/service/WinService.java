@@ -13,4 +13,5 @@ public interface WinService {
     List<Integer> strTipsToList(String tipsAsString);
     int calculateHits(List<Integer> tips, List<Integer> winningSequence);
     HashMap<Integer,Integer> calculateLottoNumberStatistic();
+    LottoNumbers calculateCurrentLottoNumbers();
 }

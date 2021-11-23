@@ -22,6 +22,7 @@ public class LottoNumberResource {
     public ResponseEntity<List<LottoNumbers>> getUserTips() {
         return ResponseEntity.ok().body(lottoNumberRepo.findAll());
     }
+
     @PostMapping("/employee/lottonumbers/save")
     public ResponseEntity<LottoNumbers> saveUser(@RequestBody LottoNumbers lottoNumbers) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());

@@ -5,7 +5,6 @@ import com.oszimt.lotto187.domain.User;
 import com.oszimt.lotto187.domain.WinningClasses;
 import com.oszimt.lotto187.repository.TipRepo;
 import com.oszimt.lotto187.repository.UserRepo;
-import com.oszimt.lotto187.repository.WinningClassesRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import java.util.List;
 public class TipServiceImpl implements TipService {
     private final TipRepo tipRepo;
     private final UserRepo userRepo;
-    private final WinningClassesRepo winningsRepo;
+    private final WinServiceImpl winService;
 
     @Override
     public Tip saveTip(Tip tip) {
@@ -34,6 +33,7 @@ public class TipServiceImpl implements TipService {
         log.info("Saving new Tip of User {} to the database", player.getName());
         Tip tipSaved = tipRepo.save(tip);
         tipSaved.getUsers().add(player);
+        winService.calculateWinningClass(winService.calculateCurrentLottoNumbers(), tipSaved);
         return tipSaved;
     }
 

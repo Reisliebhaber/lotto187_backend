@@ -4,6 +4,7 @@ import com.oszimt.lotto187.domain.LottoNumbers;
 import com.oszimt.lotto187.domain.Tip;
 import com.oszimt.lotto187.domain.User;
 import com.oszimt.lotto187.repository.LottoNumberRepo;
+import com.oszimt.lotto187.repository.UserRepo;
 import com.oszimt.lotto187.service.TipService;
 import com.oszimt.lotto187.service.UserService;
 import com.oszimt.lotto187.service.WinService;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 public class Lotto187Application {
@@ -30,7 +33,7 @@ public class Lotto187Application {
     }
 
     @Bean
-    CommandLineRunner run(UserService userService, TipService tipService, WinService winService, LottoNumberRepo lottoNumberRepo) {
+    CommandLineRunner run(UserService userService, TipService tipService, WinService winService, LottoNumberRepo lottoNumberRepo, UserRepo userRepo) {
         return args -> {
 
             Tip tysTip = new Tip(null, "6;15;4;3;2;1", 6, LocalDateTime.now(), new ArrayList<>());
@@ -55,12 +58,17 @@ public class Lotto187Application {
             tipService.saveTipWithUsername("ty", tysTip);
             //tipService.getTips("maxi").forEach(tip -> System.out.println(tip.getTips()));
             //Winning Lotto:
-            LottoNumbers lottoNumber = new LottoNumbers(null, "11;12;13;14;15;1", 6, LocalDateTime.now(), new ArrayList<>());
+            LottoNumbers lottoNumber = new LottoNumbers(null, "11;12;13;14;15;1", 6, LocalDateTime.now().minusDays(Long.valueOf(5)), new ArrayList<>());
             lottoNumberRepo.save(lottoNumber);
             winService.calculateWinningClass(lottoNumber, maxisTip);
             winService.calculateWinningClass(lottoNumber, tysTip);
             /*winService.savePlayerWin(maxisTip, rivet1);
             winService.savePlayerWin(tysTip, winClass9);*/
+            LottoNumbers lottoNumber1 = new LottoNumbers(null, "36;34;33;32;31;30", 6, LocalDateTime.now().minusDays(Long.valueOf(1)), new ArrayList<>());
+            lottoNumberRepo.save(lottoNumber1);
+            LottoNumbers lottoNumbers = Optional.ofNullable(lottoNumberRepo.findFirstByOrderByDrawingTimeDesc(LocalDateTime.now()))
+                    .map(list -> list.get(0))
+                    .orElse(new LottoNumbers());
         };
     }
 }

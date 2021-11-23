@@ -26,9 +26,12 @@ public class WinResource {
     private final WinService winService;
     private final TipService tipService;
 
-    @PostMapping("/employee/payout/save")//TODO rename
-    public ResponseEntity<Payout> savePayout(@RequestParam Payout payout) {
-        return ResponseEntity.ok().body(payoutRepo.save(payout));
+    // TODO Connect Payout to Tip or User?
+    @PostMapping("/employee/payout/save")
+    public ResponseEntity<Payout> savePayout(@RequestParam Payout payout, @RequestParam Tip tip) {
+        Payout savedPayout = payoutRepo.save(payout);
+        savedPayout.getTips().add(tip);
+        return ResponseEntity.ok().body(savedPayout);
     }
 
     @GetMapping("/payout")

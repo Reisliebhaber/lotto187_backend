@@ -13,10 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,8 +22,6 @@ import java.util.stream.Collectors;
 @Transactional
 @Slf4j
 public class WinServiceImpl implements WinService {
-    private final TipRepo tipRepo;
-    private final UserRepo userRepo;
     private final WinningClassesRepo winningClassesRepo;
     private final LottoNumberRepo lottoNumberRepo;
 
@@ -63,6 +59,14 @@ public class WinServiceImpl implements WinService {
     @Override
     public int calculateHits(List<Integer> tips, List<Integer> winningSequence) {
         return ((Long) tips.stream().filter(winningSequence::contains).count()).intValue();
+    }
+
+    @Override
+    public LottoNumbers calculateCurrentLottoNumbers() {
+        return Optional.ofNullable(lottoNumberRepo.findFirstByOrderByDrawingTimeDesc(LocalDateTime.now()))
+                .filter(list -> list.size() > 0)
+                .map(list -> list.get(0))
+                .orElse(new LottoNumbers(null, "0;0;0;0;0;0", 0, LocalDateTime.now(), new ArrayList<>()));
     }
 
     @Override // TODO if Time
