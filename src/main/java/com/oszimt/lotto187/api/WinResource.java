@@ -28,14 +28,14 @@ public class WinResource {
 
     // TODO Connect Payout to Tip or User?
     @PostMapping("/employee/payout/save")
-    public ResponseEntity<Payout> savePayout(@RequestParam Payout payout, @RequestParam Tip tip) {
-        Payout savedPayout = payoutRepo.save(payout);
-        savedPayout.getTips().add(tip);
+    public ResponseEntity<Payout> savePayout(@RequestBody TipToPayout tipToPayout) {
+        Payout savedPayout = payoutRepo.save(tipToPayout.getPayout());
+        savedPayout.getTips().add(tipToPayout.getTip());
         return ResponseEntity.ok().body(savedPayout);
     }
 
     @GetMapping("/payout")
-    public ResponseEntity<List<WinClassToPayout>> getPayout(@RequestParam User user) {
+    public ResponseEntity<List<WinClassToPayout>> getPayout(@RequestBody User user) {
         List<Tip> tips = tipService.getTipsByUsername(user.getUsername());
         //idea is to filter if there are any Winning Classes & Payout for the tip given and then add tip and
         //the winning classes & payout to a List of WinClassToPayout
@@ -43,6 +43,18 @@ public class WinResource {
                         && winningClassesRepo.existsByTips_Id(tip.getId()))
                 .map(filteredTip -> new WinClassToPayout(filteredTip,
                         payoutRepo.findByTips_Id(filteredTip.getId()).get(0),
+                        winningClassesRepo.findByTips_Id(filteredTip.getId()).get(0)))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(winPayoutResponse);
+    }
+    @GetMapping("/winningClasses")
+    public ResponseEntity<List<WinClassToPayout>> getWinClass(@RequestBody User user) {
+        List<Tip> tips = tipService.getTipsByUsername(user.getUsername());
+        //idea is to filter if there are any Winning Classes & Payout for the tip given and then add tip and
+        //the winning classes & payout to a List of WinClassToPayout
+        List<WinClassToPayout> winPayoutResponse = tips.stream().filter(tip -> winningClassesRepo.existsByTips_Id(tip.getId()))
+                .map(filteredTip -> new WinClassToPayout(filteredTip,
+                        null,
                         winningClassesRepo.findByTips_Id(filteredTip.getId()).get(0)))
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(winPayoutResponse);
@@ -55,5 +67,11 @@ class WinClassToPayout {
     private Tip tip;
     private Payout payout;
     private WinningClasses winningClasses;
+}
+@Data
+@AllArgsConstructor
+class TipToPayout {
+    private Tip tip;
+    private Payout payout;
 }
 
