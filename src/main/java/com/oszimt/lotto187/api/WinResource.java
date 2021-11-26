@@ -1,14 +1,11 @@
 package com.oszimt.lotto187.api;
 
-import com.oszimt.lotto187.domain.Payout;
 import com.oszimt.lotto187.domain.Tip;
 import com.oszimt.lotto187.domain.User;
 import com.oszimt.lotto187.domain.WinningClasses;
-import com.oszimt.lotto187.repository.PayoutRepo;
 import com.oszimt.lotto187.repository.WinningClassesRepo;
 import com.oszimt.lotto187.service.TipService;
 import com.oszimt.lotto187.service.WinService;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,57 +18,34 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class WinResource {
-    private final PayoutRepo payoutRepo;
     private final WinningClassesRepo winningClassesRepo;
     private final WinService winService;
     private final TipService tipService;
 
-    // TODO Connect Payout to Tip or User?
+    // TODO Connect Payout to Tip or User?, Danger would be if a person saves the tip via tip/save and adds a payout to the tip
     @PostMapping("/employee/payout/save")
-    public ResponseEntity<Payout> savePayout(@RequestBody TipToPayout tipToPayout) {
-        Payout savedPayout = payoutRepo.save(tipToPayout.getPayout());
-        savedPayout.getTips().add(tipToPayout.getTip());
-        return ResponseEntity.ok().body(savedPayout);
+    public ResponseEntity<Tip> savePayout(@RequestBody TipIdAndPayout tipIdAndPayout) {
+        Tip tip = tipService.getTip(tipIdAndPayout.getTipId());
+        tip.setPayout(tipIdAndPayout.getPayout());
+        return ResponseEntity.ok().body(tipService.saveTip(tip));
     }
 
     @GetMapping("/payout")
-    public ResponseEntity<List<WinClassToPayout>> getPayout(@RequestBody User user) {
+    public ResponseEntity<List<WinningClasses>> getPayout(@RequestBody User user) {
         List<Tip> tips = tipService.getTipsByUsername(user.getUsername());
         //idea is to filter if there are any Winning Classes & Payout for the tip given and then add tip and
         //the winning classes & payout to a List of WinClassToPayout
-        List<WinClassToPayout> winPayoutResponse = tips.stream().filter(tip -> payoutRepo.existsByTips_Id(tip.getId())
+        List<WinningClasses> winPayoutResponse = tips.stream().filter(tip -> (tip.getPayout() >= 0)
                         && winningClassesRepo.existsByTips_Id(tip.getId()))
-                .map(filteredTip -> new WinClassToPayout(filteredTip,
-                        payoutRepo.findByTips_Id(filteredTip.getId()).get(0),
-                        winningClassesRepo.findByTips_Id(filteredTip.getId()).get(0)))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(winPayoutResponse);
-    }
-    @GetMapping("/winningClasses")
-    public ResponseEntity<List<WinClassToPayout>> getWinClass(@RequestBody User user) {
-        List<Tip> tips = tipService.getTipsByUsername(user.getUsername());
-        //idea is to filter if there are any Winning Classes & Payout for the tip given and then add tip and
-        //the winning classes & payout to a List of WinClassToPayout
-        List<WinClassToPayout> winPayoutResponse = tips.stream().filter(tip -> winningClassesRepo.existsByTips_Id(tip.getId()))
-                .map(filteredTip -> new WinClassToPayout(filteredTip,
-                        null,
-                        winningClassesRepo.findByTips_Id(filteredTip.getId()).get(0)))
+                .map(filteredTip -> winningClassesRepo.findByTips_Id(filteredTip.getId()).get(0))
+                .distinct()
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(winPayoutResponse);
     }
 }
 
 @Data
-@AllArgsConstructor
-class WinClassToPayout {
-    private Tip tip;
-    private Payout payout;
-    private WinningClasses winningClasses;
+class TipIdAndPayout {
+    private long tipId;
+    private double payout;
 }
-@Data
-@AllArgsConstructor
-class TipToPayout {
-    private Tip tip;
-    private Payout payout;
-}
-

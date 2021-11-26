@@ -14,4 +14,5 @@ public interface WinService {
     int calculateHits(List<Integer> tips, List<Integer> winningSequence);
     HashMap<Integer,Integer> calculateLottoNumberStatistic();
     LottoNumbers calculateCurrentLottoNumbers();
+    WinningClasses determineWinClassWithSpecificTipOnly(long tipId);
 }

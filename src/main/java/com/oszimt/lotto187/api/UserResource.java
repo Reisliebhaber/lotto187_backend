@@ -33,24 +33,24 @@ import java.util.stream.Collectors;
 public class UserResource {
     private final UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/employee/users")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @PostMapping("/user/save")//TODO just change this to registry if wanted
+    @PostMapping("/register")//TODO just change this to registry if wanted
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(user));//instead of default return 200 --> 202 which we personally define
     }
 
-    @PostMapping("/role/save")
+    @PostMapping("/employee/role/save")
     public ResponseEntity<Role> saveRole(@RequestBody Role role) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveRole(role));
     }
 
-    @PostMapping("/role/addtouser")
+    @PostMapping("/employee/role/addtouser")
     public ResponseEntity<Role> addRoleToUser(@RequestBody RoleToUserForm form) {
         userService.addRoleToUser(form.getUsername(), form.getRoleName());
         return ResponseEntity.ok().build();

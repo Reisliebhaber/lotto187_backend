@@ -5,8 +5,6 @@ import com.oszimt.lotto187.domain.LottoNumbers;
 import com.oszimt.lotto187.domain.Tip;
 import com.oszimt.lotto187.domain.WinningClasses;
 import com.oszimt.lotto187.repository.LottoNumberRepo;
-import com.oszimt.lotto187.repository.TipRepo;
-import com.oszimt.lotto187.repository.UserRepo;
 import com.oszimt.lotto187.repository.WinningClassesRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,13 +67,21 @@ public class WinServiceImpl implements WinService {
                 .orElse(new LottoNumbers(null, "0;0;0;0;0;0", 0, LocalDateTime.now(), new ArrayList<>()));
     }
 
+    @Override
+    public WinningClasses determineWinClassWithSpecificTipOnly(long tipId) {
+        WinningClasses winningClasses = winningClassesRepo.findByTips_Id(tipId).get(0);
+        List<Tip> winTip = winningClasses.getTips().stream().filter(tip -> tip.getId() == tipId).collect(Collectors.toList());
+        winningClasses.setTips(winTip);
+        return winningClasses;
+    }
+
     @Override // TODO if Time
     public HashMap<Integer, Integer> calculateLottoNumberStatistic() {
-        List<Integer> allLottoNumbers = new ArrayList<>();
+        /*List<Integer> allLottoNumbers = new ArrayList<>();
         HashMap<Integer, Integer> lottoNumberStatistic = new HashMap<>();
         lottoNumberRepo.findAll().forEach(x -> Arrays.stream(x.getLottoNumbers().split(";"))
                 .map(Integer::parseInt).forEachOrdered(allLottoNumbers::add));
-        /*lottoNumberStatistic = allLottoNumbers.stream().collect(
+        lottoNumberStatistic = allLottoNumbers.stream().collect(
                 Collectors.groupingBy(num -> Integer.parseInt(num.toString()),
                 Collectors.summingInt(a -> 1)));
 

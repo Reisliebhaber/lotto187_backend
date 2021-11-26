@@ -18,6 +18,7 @@ public class Tip {
     private String tips;
     private int superNumber;
     private LocalDateTime tippingTime;
+    private double payout;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<User> users;
 }
