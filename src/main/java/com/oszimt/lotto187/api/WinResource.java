@@ -23,7 +23,7 @@ public class WinResource {
     private final TipService tipService;
 
     // TODO Connect Payout to Tip or User?, Danger would be if a person saves the tip via tip/save and adds a payout to the tip
-    @PostMapping("/employee/payout/save")
+    @PutMapping("/employee/payout/save")
     public ResponseEntity<Tip> savePayout(@RequestBody TipIdAndPayout tipIdAndPayout) {
         Tip tip = tipService.getTip(tipIdAndPayout.getTipId());
         tip.setPayout(tipIdAndPayout.getPayout());
