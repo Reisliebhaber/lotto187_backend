@@ -34,7 +34,7 @@ public class UserResource {
     private final UserService userService;
 
     @GetMapping("/employee/users")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<User>> getUser() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
@@ -91,6 +91,11 @@ public class UserResource {
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
+    }
+
+    @GetMapping("/currentUser/{username}")
+    public ResponseEntity<User> getUsers(@PathVariable("username") String username) {
+        return ResponseEntity.ok().body(userService.getUser(username));
     }
 }
 

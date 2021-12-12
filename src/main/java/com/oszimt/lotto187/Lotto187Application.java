@@ -14,15 +14,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @SpringBootApplication
 public class Lotto187Application {
@@ -43,10 +37,10 @@ public class Lotto187Application {
             Tip tysTip = new Tip(null, "6;15;4;3;2;1", 6, LocalDateTime.now(),0, new ArrayList<>());
             Tip maxisTip = new Tip(null, "1;2;3;3;2;1", 0, LocalDateTime.now(),0, new ArrayList<>());
 
-            userService.saveUser(new User(null, "Maxis Cock", "maxi", "12345", new ArrayList<>()));
-            userService.saveUser(new User(null, "Lams Cock", "lami", "12345", new ArrayList<>()));
-            userService.saveUser(new User(null, "Tysriesen Cock", "ty", "12345", new ArrayList<>()));
-            userService.saveUser(new User(null, "Trinityforce Cock", "arnold", "12345", new ArrayList<>()));
+            userService.saveUser(new User(null, "Maxis Cont", "maxi", "12345", new ArrayList<>()));
+            userService.saveUser(new User(null, "Lams Cont", "lami", "12345", new ArrayList<>()));
+            userService.saveUser(new User(null, "Tys Cont", "ty", "12345", new ArrayList<>()));
+            userService.saveUser(new User(null, "Trinity Cont", "arnold", "12345", new ArrayList<>()));
 
             userService.addRoleToUser("maxi", "ROLE_USER");
             userService.addRoleToUser("maxi", "ROLE_EMPLOYEE");
@@ -67,11 +61,6 @@ public class Lotto187Application {
             //Winning Lotto:
             LottoNumbers lottoNumber = new LottoNumbers(null, "11;12;13;14;15;1", 6, LocalDateTime.now().minusDays(Long.valueOf(5)), new ArrayList<>());
             lottoNumberRepo.save(lottoNumber);
-            /*winService.savePlayerWin(maxisTip, rivet1);
-            winService.savePlayerWin(tysTip, winClass9);
-            LottoNumbers lottoNumbers = Optional.ofNullable(lottoNumberRepo.findFirstByOrderByDrawingTimeDesc(LocalDateTime.now()))
-                    .map(list -> list.get(0))
-                    .orElse(new LottoNumbers());*/
             LottoNumbers lottoNumber1 = new LottoNumbers(null, "36;34;33;32;31;30", 6, LocalDateTime.now().minusDays(Long.valueOf(1)), new ArrayList<>());
             lottoNumberRepo.save(lottoNumber1);
         };

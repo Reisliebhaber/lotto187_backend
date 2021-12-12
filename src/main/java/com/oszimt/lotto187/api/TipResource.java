@@ -23,7 +23,7 @@ public class TipResource {
         return ResponseEntity.ok().body(tipService.getTipsByUsername(""));
     }*/
 
-    @GetMapping("/tips")
+    @PostMapping("/tips")
     public ResponseEntity<List<Tip>> getUserTips(@RequestBody User user) {
         return ResponseEntity.ok().body(tipService.getTipsByUsername(user.getUsername()));
     }

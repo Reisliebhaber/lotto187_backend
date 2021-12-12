@@ -30,7 +30,7 @@ public class WinResource {
         return ResponseEntity.ok().body(tipService.saveTip(tip));
     }
 
-    @GetMapping("/payout")
+    @PostMapping("/payout")
     public ResponseEntity<List<WinningClasses>> getPayout(@RequestBody User user) {
         List<Tip> tips = tipService.getTipsByUsername(user.getUsername());
         //idea is to filter if there are any Winning Classes & Payout for the tip given and then add tip and
