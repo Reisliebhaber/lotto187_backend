@@ -17,17 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TipResource {
     private final TipService tipService;
-/*
-    @GetMapping("/tips")
-    public ResponseEntity<List<Tip>> getTips() {
-        return ResponseEntity.ok().body(tipService.getTipsByUsername(""));
-    }*/
-
     @PostMapping("/tips")
     public ResponseEntity<List<Tip>> getUserTips(@RequestBody User user) {
         return ResponseEntity.ok().body(tipService.getTipsByUsername(user.getUsername()));
     }
-
     @PostMapping("/tip/save")
     public ResponseEntity<Tip> saveUser(@RequestBody TipAndUser tipAndUser) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());

@@ -61,6 +61,11 @@ public class Lotto187Application {
             //Winning Lotto:
             LottoNumbers lottoNumber = new LottoNumbers(null, "11;12;13;14;15;1", 6, LocalDateTime.now().minusDays(Long.valueOf(5)), new ArrayList<>());
             lottoNumberRepo.save(lottoNumber);
+            /*winService.savePlayerWin(maxisTip, rivet1);
+            winService.savePlayerWin(tysTip, winClass9);
+            LottoNumbers lottoNumbers = Optional.ofNullable(lottoNumberRepo.findFirstByOrderByDrawingTimeDesc(LocalDateTime.now()))
+                    .map(list -> list.get(0))
+                    .orElse(new LottoNumbers());*/
             LottoNumbers lottoNumber1 = new LottoNumbers(null, "36;34;33;32;31;30", 6, LocalDateTime.now().minusDays(Long.valueOf(1)), new ArrayList<>());
             lottoNumberRepo.save(lottoNumber1);
         };
